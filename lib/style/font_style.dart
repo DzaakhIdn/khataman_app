@@ -30,6 +30,31 @@ class AppFonts {
       color: color,
     );
   }
+
+  static TextStyle secondary({
+    required FontEngine engine,
+    required double size,
+    FontWeight weight = FontWeight.normal,
+    double height = 1.4,
+    Color? color,
+  }) {
+    if (engine == FontEngine.google) {
+      return GoogleFonts.quicksand(
+        fontSize: size,
+        fontWeight: weight,
+        height: height,
+        color: color,
+      );
+    }
+
+    return TextStyle(
+      fontFamily: 'Quicksand',
+      fontSize: size,
+      fontWeight: weight,
+      height: height,
+      color: color,
+    );
+  }
 }
 
 class AppFontSizes {
@@ -106,7 +131,7 @@ class AppTextStyles {
 
   static TextStyle bodyMd(BuildContext context, FontEngine engine) {
     final c = AppColors.of(context);
-    return AppFonts.base(
+    return AppFonts.secondary(
       engine: engine,
       size: AppFontSizes.bodyMd,
       weight: FontWeight.w400,
@@ -117,7 +142,7 @@ class AppTextStyles {
 
   static TextStyle bodySm(BuildContext context, FontEngine engine) {
     final c = AppColors.of(context);
-    return AppFonts.base(
+    return AppFonts.secondary(
       engine: engine,
       size: AppFontSizes.bodySm,
       weight: FontWeight.w400,
@@ -128,7 +153,7 @@ class AppTextStyles {
 
   static TextStyle caption(BuildContext context, FontEngine engine) {
     final c = AppColors.of(context);
-    return AppFonts.base(
+    return AppFonts.secondary(
       engine: engine,
       size: AppFontSizes.caption,
       weight: FontWeight.w400,
@@ -138,7 +163,7 @@ class AppTextStyles {
   }
 
   static TextStyle button(FontEngine engine) {
-    return AppFonts.base(
+    return AppFonts.secondary(
       engine: engine,
       size: AppFontSizes.button,
       weight: FontWeight.w600,
@@ -160,7 +185,7 @@ class AppTextStyles {
 
   static TextStyle label(BuildContext context, FontEngine engine) {
     final c = AppColors.of(context);
-    return AppFonts.base(
+    return AppFonts.secondary(
       engine: engine,
       size: AppFontSizes.bodySm,
       weight: FontWeight.w500,
