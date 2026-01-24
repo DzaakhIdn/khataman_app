@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:khataman_app/style/app_colors.dart';
-import 'package:khataman_app/style/app_radius.dart';
 import 'package:khataman_app/widget/button.dart';
 import 'package:provider/provider.dart';
 import 'package:khataman_app/screens/providers/onboarding_provider.dart';

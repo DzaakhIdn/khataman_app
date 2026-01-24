@@ -1,5 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:khataman_app/style/app_radius.dart';
+
+enum BorderRadiusType { small, medium, large, extraLarge, full }
+
+extension BorderRadiusExtension on BorderRadiusType {
+  double get value {
+    switch (this) {
+      case BorderRadiusType.small:
+        return 4.0;
+      case BorderRadiusType.medium:
+        return 8.0;
+      case BorderRadiusType.large:
+        return 12.0;
+      case BorderRadiusType.extraLarge:
+        return 16.0;
+      case BorderRadiusType.full:
+        return 999.0;
+    }
+  }
+
+  BorderRadius get borderRadius {
+    return BorderRadius.all(Radius.circular(value));
+  }
+}
 
 class MyButton extends StatelessWidget {
   final String text;
@@ -23,7 +45,8 @@ class MyButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: width,
-      child: ElevatedButton(
+      child: ElevatedButton.icon(
+        icon: buttonIcon,
         onPressed: onPressed,
         style: ButtonStyle(
           backgroundColor: WidgetStateProperty.resolveWith<Color>((
@@ -43,10 +66,10 @@ class MyButton extends StatelessWidget {
             RoundedRectangleBorder(borderRadius: radius.borderRadius),
           ),
           padding: WidgetStateProperty.all<EdgeInsets>(
-            const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            const EdgeInsets.symmetric(horizontal: 24, vertical: 15),
           ),
         ),
-        child: Text(text),
+        label: Text(text),
       ),
     );
   }
