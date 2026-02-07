@@ -1,194 +1,131 @@
-import 'app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sizer/sizer.dart';
-
-enum FontEngine { local, google }
-
-class AppFonts {
-  static TextStyle base({
-    required FontEngine engine,
-    required double size,
-    FontWeight weight = FontWeight.normal,
-    double height = 1.4,
-    Color? color,
-  }) {
-    if (engine == FontEngine.google) {
-      return GoogleFonts.raleway(
-        fontSize: size,
-        fontWeight: weight,
-        height: height,
-        color: color,
-      );
-    }
-
-    return TextStyle(
-      fontFamily: 'Raleway',
-      fontSize: size,
-      fontWeight: weight,
-      height: height,
-      color: color,
-    );
-  }
-
-  static TextStyle secondary({
-    required FontEngine engine,
-    required double size,
-    FontWeight weight = FontWeight.normal,
-    double height = 1.4,
-    Color? color,
-  }) {
-    if (engine == FontEngine.google) {
-      return GoogleFonts.quicksand(
-        fontSize: size,
-        fontWeight: weight,
-        height: height,
-        color: color,
-      );
-    }
-
-    return TextStyle(
-      fontFamily: 'Quicksand',
-      fontSize: size,
-      fontWeight: weight,
-      height: height,
-      color: color,
-    );
-  }
-}
+import 'app_colors.dart';
 
 class AppFontSizes {
-  const AppFontSizes._();
+  static const double h1 = 24;
+  static const double h2 = 22;
+  static const double h3 = 20;
 
-  static double get h1 => 24.sp;
-  static double get h2 => 22.sp;
-  static double get h3 => 20.sp;
+  static const double bodyLg = 18;
+  static const double bodyMd = 16;
+  static const double bodySm = 14;
 
-  static double get bodyLg => 18.sp;
-  static double get bodyMd => 16.sp;
-  static double get bodySm => 14.sp;
-
-  static double get button => 16.sp;
-  static double get caption => 14.sp;
+  static const double button = 16;
+  static const double caption = 14;
 }
 
 class AppLineHeights {
-  const AppLineHeights._(); // prevent instantiation
-
-  static double get tight => 1.2;
-
-  static double get normal => 1.4;
-
-  static double get relaxed => 1.6;
+  static const double tight = 1.2;
+  static const double normal = 1.4;
+  static const double relaxed = 1.6;
 }
 
 class AppTextStyles {
-  const AppTextStyles._();
-
-  static TextStyle h1(BuildContext context, FontEngine engine) {
+  static TextStyle h1(BuildContext context) {
     final c = AppColors.of(context);
-    return AppFonts.base(
-      engine: engine,
-      size: AppFontSizes.h1,
-      weight: FontWeight.w700,
+    return GoogleFonts.quicksand(
+      fontSize: AppFontSizes.h1,
+      fontWeight: FontWeight.w700,
+      height: AppLineHeights.normal,
+      color: c.textPrimary,
+    );
+  }
+
+  static TextStyle h2(BuildContext context) {
+    final c = AppColors.of(context);
+    return GoogleFonts.quicksand(
+      fontSize: AppFontSizes.h2,
+      fontWeight: FontWeight.w700,
       height: AppLineHeights.tight,
       color: c.textPrimary,
     );
   }
 
-  static TextStyle h2(BuildContext context, FontEngine engine) {
+  static TextStyle h3(BuildContext context) {
     final c = AppColors.of(context);
-    return AppFonts.base(
-      engine: engine,
-      size: AppFontSizes.h2,
-      weight: FontWeight.w700,
-      height: AppLineHeights.tight,
-      color: c.textPrimary,
-    );
-  }
-
-  static TextStyle h3(BuildContext context, FontEngine engine) {
-    final c = AppColors.of(context);
-    return AppFonts.base(
-      engine: engine,
-      size: AppFontSizes.h3,
-      weight: FontWeight.w600,
+    return GoogleFonts.quicksand(
+      fontSize: AppFontSizes.h3,
+      fontWeight: FontWeight.w600,
       height: AppLineHeights.normal,
       color: c.textPrimary,
     );
   }
 
-  static TextStyle bodyLg(BuildContext context, FontEngine engine) {
+  static TextStyle bodyLg(BuildContext context) {
     final c = AppColors.of(context);
-    return AppFonts.base(
-      engine: engine,
-      size: AppFontSizes.bodyLg,
-      weight: FontWeight.w400,
+    return GoogleFonts.quicksand(
+      fontSize: AppFontSizes.bodyLg,
+      fontWeight: FontWeight.w400,
       height: AppLineHeights.relaxed,
       color: c.textPrimary,
     );
   }
 
-  static TextStyle bodyMd(BuildContext context, FontEngine engine) {
+  static TextStyle bodyMd(BuildContext context) {
     final c = AppColors.of(context);
-    return AppFonts.secondary(
-      engine: engine,
-      size: AppFontSizes.bodyMd,
-      weight: FontWeight.w400,
+    return GoogleFonts.quicksand(
+      fontSize: AppFontSizes.bodyMd,
+      fontWeight: FontWeight.w400,
       height: AppLineHeights.relaxed,
       color: c.textPrimary,
     );
   }
 
-  static TextStyle bodySm(BuildContext context, FontEngine engine) {
+  static TextStyle bodySm(BuildContext context) {
     final c = AppColors.of(context);
-    return AppFonts.secondary(
-      engine: engine,
-      size: AppFontSizes.bodySm,
-      weight: FontWeight.w400,
+    return GoogleFonts.quicksand(
+      fontSize: AppFontSizes.bodySm,
+      fontWeight: FontWeight.w400,
       height: AppLineHeights.normal,
       color: c.textSecondary,
     );
   }
 
-  static TextStyle caption(BuildContext context, FontEngine engine) {
+  static TextStyle caption(BuildContext context) {
     final c = AppColors.of(context);
-    return AppFonts.secondary(
-      engine: engine,
-      size: AppFontSizes.caption,
-      weight: FontWeight.w400,
+    return GoogleFonts.quicksand(
+      fontSize: AppFontSizes.caption,
+      fontWeight: FontWeight.w400,
       height: AppLineHeights.normal,
       color: c.textSecondary,
     );
   }
 
-  static TextStyle button(FontEngine engine) {
-    return AppFonts.secondary(
-      engine: engine,
-      size: AppFontSizes.button,
-      weight: FontWeight.w600,
+  static TextStyle button() {
+    return GoogleFonts.quicksand(
+      fontSize: AppFontSizes.button,
+      fontWeight: FontWeight.w600,
       height: AppLineHeights.normal,
       color: Colors.white,
     );
   }
 
-  static TextStyle bodyStrong(BuildContext context, FontEngine engine) {
+  static TextStyle bodyStrong(BuildContext context) {
     final c = AppColors.of(context);
-    return AppFonts.base(
-      engine: engine,
-      size: AppFontSizes.bodyMd,
-      weight: FontWeight.w600,
+    return GoogleFonts.quicksand(
+      fontSize: AppFontSizes.bodyMd,
+      fontWeight: FontWeight.w600,
       height: AppLineHeights.normal,
       color: c.textPrimary,
     );
   }
 
-  static TextStyle label(BuildContext context, FontEngine engine) {
+  static TextStyle label(BuildContext context) {
     final c = AppColors.of(context);
-    return AppFonts.secondary(
-      engine: engine,
-      size: AppFontSizes.bodySm,
-      weight: FontWeight.w500,
+    return GoogleFonts.quicksand(
+      fontSize: AppFontSizes.bodySm,
+      fontWeight: FontWeight.w500,
+      height: AppLineHeights.normal,
+      color: c.textPrimary,
+    );
+  }
+
+  static TextStyle onBoarding(BuildContext context) {
+    final c = AppColors.of(context);
+    return GoogleFonts.quicksand(
+      fontSize: AppFontSizes.bodyMd,
+      fontWeight: FontWeight.w400,
       height: AppLineHeights.normal,
       color: c.textPrimary,
     );

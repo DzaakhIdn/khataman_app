@@ -34,12 +34,12 @@ class AppColors {
   }
 
   static const light = AppColors(
-    background: Color(0xFF3B4953),
+    background: Color(0xFFF7FDFB),
     surface: Color(0xFFEBF4DD),
     textPrimary: Color(0xFF1A1A1A),
     textSecondary: Color(0xFF6B7280),
-    primary: Color(0xFF90AB8B),
-    secondary: Color(0xFF5A7863),
+    primary: Color(0xFF10B981),
+    secondary: Color(0xFFC0B87A),
     divider: Color(0xFFE5E7EB),
     shadow: Color(0x1A000000),
     onPrimary: Colors.white,
