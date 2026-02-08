@@ -77,3 +77,7 @@ final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   final repo = ref.read(authRepositoryProvider);
   return AuthNotifier(repo);
 });
+
+// class ProfileState {
+  
+// }

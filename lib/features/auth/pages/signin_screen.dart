@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:khataman_app/core/style/app_colors.dart';
 import 'package:khataman_app/features/auth/provider/auth_provider.dart';
+import 'package:iconify_flutter/iconify_flutter.dart';
+import 'package:colorful_iconify_flutter/icons/logos.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
   static const routeName = '/signin';
@@ -337,18 +339,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                                 ),
                                 backgroundColor: Colors.white.withOpacity(0.1),
                               ),
-                              icon: Image.asset(
-                                'assets/images/google_icon.png',
-                                height: 24,
-                                width: 24,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Icon(
-                                    Icons.g_mobiledata,
-                                    color: Colors.white,
-                                    size: 24,
-                                  );
-                                },
-                              ),
+                              icon: Iconify(Logos.google_icon, size: 20),
                               label: Text(
                                 'Google',
                                 style: GoogleFonts.inter(
