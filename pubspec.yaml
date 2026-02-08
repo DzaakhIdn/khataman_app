@@ -41,7 +41,7 @@ dependencies:
   flutter_svg: ^2.2.3
   iconify_flutter: ^0.0.7
   go_router: ^17.1.0
-  riverpod: ^3.2.1
+  flutter_riverpod: ^3.2.1
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +69,7 @@ flutter:
   assets:
   #  - assets/images
     - assets/splashscreen/
+    - assets/images/
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see

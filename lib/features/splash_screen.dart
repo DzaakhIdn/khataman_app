@@ -1,39 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:khataman_app/core/style/app_colors.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:khataman_app/features/auth/provider/auth_provider.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   static const routeName = '/';
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
-  static String patern = 'assets/splashscreen/pattern.svg';
-  late final SupabaseClient client;
-
+class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // _redirect();
+    _navigateToNext();
   }
 
-  // Future<void> _redirect() async {
-  //   await Future.delayed(Duration.zero);
-  //   final session = client.auth.currentSession;
-  //   if(session != null ){
-  //     context.pushReplacementNamed()
-  //   }
-  // }
+  void _navigateToNext() async {
+    // Tunggu 2 detik untuk splash screen
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (mounted) {
+      try {
+        // Cek authentication status
+        final authState = ref.read(authProvider);
+
+        if (authState.user != null) {
+          // User sudah login, ke home
+          context.go('/home');
+        } else {
+          // User belum login, ke signin
+          context.go('/signin');
+        }
+      } catch (e) {
+        // Jika ada error, langsung ke signin
+        debugPrint('Error checking auth: $e');
+        context.go('/signin');
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    String patern = 'assets/splashscreen/pattern.svg';
+
     return Scaffold(
       body: Stack(
         children: [
