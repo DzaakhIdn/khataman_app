@@ -33,7 +33,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     final authState = ref.watch(authProvider);
     final authNotifier = ref.read(authProvider.notifier);
 
-    // Listen untuk perubahan state
     ref.listen(authProvider, (previous, next) {
       if (next.user != null) {
         context.go('/home');
@@ -359,14 +358,14 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                             children: [
                               Text(
                                 "Don't have an account? ",
-                                style: GoogleFonts.inter(
+                                style: GoogleFonts.rubik(
                                   color: Colors.white.withOpacity(0.6),
                                   fontSize: 14,
                                 ),
                               ),
                               TextButton(
                                 onPressed: () {
-                                  context.go('/signup');
+                                  context.push('/signup');
                                 },
                                 child: Text(
                                   'Sign up',

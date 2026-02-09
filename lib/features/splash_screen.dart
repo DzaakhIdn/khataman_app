@@ -23,23 +23,18 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   void _navigateToNext() async {
-    // Tunggu 2 detik untuk splash screen
     await Future.delayed(const Duration(seconds: 2));
 
     if (mounted) {
       try {
-        // Cek authentication status
         final authState = ref.read(authProvider);
 
         if (authState.user != null) {
-          // User sudah login, ke home
           context.go('/home');
         } else {
-          // User belum login, ke signin
           context.go('/signin');
         }
       } catch (e) {
-        // Jika ada error, langsung ke signin
         debugPrint('Error checking auth: $e');
         context.go('/signin');
       }

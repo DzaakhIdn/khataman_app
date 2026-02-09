@@ -78,6 +78,6 @@ final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
   return AuthNotifier(repo);
 });
 
-// class ProfileState {
+class ProfileState {
   
-// }
+}
