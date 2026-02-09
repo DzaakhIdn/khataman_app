@@ -1,30 +1,34 @@
+import 'package:khataman_app/features/profiles/profile_repository.dart';
 import 'package:riverpod/legacy.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:riverpod/riverpod.dart';
 import '../auth_repository.dart';
-import '../model/user_model.dart';
 
-final supabaseClientProvider = Provider<SupabaseClient>((ref) {
-  return Supabase.instance.client;
-});
+final supabaseClientProvider = Provider((ref) => Supabase.instance.client);
 
-final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  final client = ref.read(supabaseClientProvider);
-  return AuthRepository(client);
-});
+final profileRepositoryProvider = Provider(
+  (ref) => ProfileRepository(ref.read(supabaseClientProvider)),
+);
+
+final authRepositoryProvider = Provider(
+  (ref) => AuthRepository(
+    ref.read(supabaseClientProvider),
+    ref.read(profileRepositoryProvider),
+  ),
+);
 
 class AuthState {
-  final AppUser? user;
   final bool isLoading;
   final String? error;
+  final String? userId;
 
-  AuthState({this.user, this.isLoading = false, this.error});
+  AuthState({this.isLoading = false, this.error, this.userId});
 
-  AuthState copyWith({AppUser? user, bool? isLoading, String? error}) {
+  AuthState copyWith({bool? isLoading, String? error, String? userId}) {
     return AuthState(
-      user: user ?? this.user,
       isLoading: isLoading ?? this.isLoading,
       error: error,
+      userId: userId ?? this.userId,
     );
   }
 }
@@ -32,14 +36,21 @@ class AuthState {
 class AuthNotifier extends StateNotifier<AuthState> {
   final AuthRepository _repository;
 
-  AuthNotifier(this._repository) : super(AuthState()) {
-    _checkUser();
-  }
+  AuthNotifier(this._repository) : super(AuthState());
 
-  void _checkUser() {
-    final user = _repository.getCurrentUser();
-    if (user != null) {
-      state = state.copyWith(user: user);
+  Future<void> register(String email, String password, String username) async {
+    state = state.copyWith(isLoading: true, error: null);
+
+    try {
+      final userId = await _repository.register(
+        email: email,
+        password: password,
+        username: username,
+      );
+
+      state = state.copyWith(isLoading: false, userId: userId);
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
@@ -47,21 +58,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
-      final user = await _repository.login(email: email, password: password);
+      await _repository.login(email: email, password: password);
+      final user = _repository.getCurrentUser();
 
-      state = state.copyWith(user: user, isLoading: false);
-    } catch (e) {
-      state = state.copyWith(isLoading: false, error: e.toString());
-    }
-  }
-
-  Future<void> register(String email, String password) async {
-    state = state.copyWith(isLoading: true, error: null);
-
-    try {
-      final user = await _repository.register(email: email, password: password);
-
-      state = state.copyWith(user: user, isLoading: false);
+      state = state.copyWith(isLoading: false, userId: user?.id);
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
     }
@@ -73,11 +73,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 }
 
-final authProvider = StateNotifierProvider<AuthNotifier, AuthState>((ref) {
-  final repo = ref.read(authRepositoryProvider);
-  return AuthNotifier(repo);
-});
-
-class ProfileState {
-  
-}
+final authProvider = StateNotifierProvider<AuthNotifier, AuthState>(
+  (ref) => AuthNotifier(ref.read(authRepositoryProvider)),
+);

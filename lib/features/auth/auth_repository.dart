@@ -1,47 +1,39 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'model/user_model.dart';
+import '../profiles/profile_repository.dart';
 
 class AuthRepository {
   final SupabaseClient _client;
+  final ProfileRepository _profileRepository;
 
-  AuthRepository(this._client);
+  AuthRepository(this._client, this._profileRepository);
 
-  AppUser? getCurrentUser() {
-    final user = _client.auth.currentUser;
-    if (user == null) return null;
-    return AppUser.fromSupabase(user);
-  }
-
-  Future<AppUser> login({
+  Future<String> register({
     required String email,
     required String password,
+    required String username,
   }) async {
-    final response = await _client.auth.signInWithPassword(
+    final authResponse = await _client.auth.signUp(
       email: email,
       password: password,
     );
 
-    if (response.user == null) {
-      throw Exception('Login gagal');
+    final user = authResponse.user;
+    if (user == null) {
+      throw Exception('Register gagal');
     }
 
-    return AppUser.fromSupabase(response.user);
+    // Insert profile (username only)
+    await _profileRepository.createProfile(userId: user.id, username: username);
+
+    return user.id;
   }
 
-  Future<AppUser> register({
-    required String email,
-    required String password,
-  }) async {
-    final response = await _client.auth.signUp(
-      email: email,
-      password: password,
-    );
+  Future<void> login({required String email, required String password}) async {
+    await _client.auth.signInWithPassword(email: email, password: password);
+  }
 
-    if (response.user == null) {
-      throw Exception('login gagal');
-    }
-
-    return AppUser.fromSupabase(response.user);
+  User? getCurrentUser() {
+    return _client.auth.currentUser;
   }
 
   Future<void> logout() async {

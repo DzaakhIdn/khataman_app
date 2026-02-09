@@ -6,6 +6,7 @@ import 'package:khataman_app/core/style/app_colors.dart';
 import 'package:khataman_app/features/auth/provider/auth_provider.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:colorful_iconify_flutter/icons/logos.dart';
+import 'package:toastification/toastification.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
   static const routeName = '/signin';
@@ -34,13 +35,21 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     final authNotifier = ref.read(authProvider.notifier);
 
     ref.listen(authProvider, (previous, next) {
-      if (next.user != null) {
+      if (next.userId != null) {
         context.go('/home');
       }
       if (next.error != null) {
-        // Tampilkan error
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.error!), backgroundColor: Colors.red),
+        toastification.show(
+          context: context,
+          type: ToastificationType.error,
+          style: ToastificationStyle.flatColored,
+          title: Text("error!"),
+          description: Text(next.error!),
+          alignment: Alignment.topRight,
+          autoCloseDuration: const Duration(seconds: 4),
+          borderRadius: BorderRadius.circular(12.0),
+          dragToClose: true,
+          showIcon: false,
         );
       }
     });

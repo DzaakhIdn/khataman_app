@@ -15,7 +15,7 @@ class SignUpScreen extends ConsumerStatefulWidget {
 }
 
 class _SignUpScreenState extends ConsumerState<SignUpScreen> {
-  final _fullNameController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -23,7 +23,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
   @override
   void dispose() {
-    _fullNameController.dispose();
+    _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -36,7 +36,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
     // Listen untuk perubahan state
     ref.listen(authProvider, (previous, next) {
-      if (next.user != null) {
+      if (next.userId != null) {
         // Signup berhasil, redirect ke home
         context.go('/home');
       }
@@ -155,7 +155,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
                                 // Full Name Field
                                 TextFormField(
-                                  controller: _fullNameController,
+                                  controller: _usernameController,
                                   style: GoogleFonts.inter(
                                     fontSize: 16,
                                     color: Colors.black,
@@ -375,6 +375,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                               authNotifier.register(
                                                 _emailController.text.trim(),
                                                 _passwordController.text,
+                                                _usernameController.text,
                                               );
                                             }
                                           },
