@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:khataman_app/core/style/app_colors.dart';
 import 'package:khataman_app/features/auth/provider/auth_provider.dart';
+import 'package:toastification/toastification.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
   static const routeName = '/signup';
@@ -40,12 +41,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         // Signup berhasil, redirect ke home
         context.go('/home');
       }
-      if (next.error != null) {
-        // Tampilkan error
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(next.error!), backgroundColor: Colors.red),
-        );
-      }
+      // Error handling sudah ditangani di AuthProvider dengan toastification
     });
 
     return Scaffold(
@@ -141,9 +137,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Full Name Label
+                                // Username Label
                                 Text(
-                                  'Full Name',
+                                  'Username',
                                   style: GoogleFonts.inter(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -153,7 +149,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
                                 const SizedBox(height: 8),
 
-                                // Full Name Field
+                                // Username Field
                                 TextFormField(
                                   controller: _usernameController,
                                   style: GoogleFonts.inter(
@@ -161,7 +157,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                     color: Colors.black,
                                   ),
                                   decoration: InputDecoration(
-                                    hintText: 'Enter your full name',
+                                    hintText: 'Enter your username',
                                     hintStyle: GoogleFonts.inter(
                                       color: Colors.grey[400],
                                       fontSize: 16,
@@ -194,10 +190,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return 'Please enter your full name';
+                                      return 'Please enter your username';
                                     }
                                     if (value.length < 2) {
-                                      return 'Name must be at least 2 characters';
+                                      return 'Username must be at least 2 characters';
                                     }
                                     return null;
                                   },
@@ -375,7 +371,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                               authNotifier.register(
                                                 _emailController.text.trim(),
                                                 _passwordController.text,
-                                                _usernameController.text,
+                                                _usernameController.text.trim(),
                                               );
                                             }
                                           },

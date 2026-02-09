@@ -38,20 +38,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       if (next.userId != null) {
         context.go('/home');
       }
-      if (next.error != null) {
-        toastification.show(
-          context: context,
-          type: ToastificationType.error,
-          style: ToastificationStyle.flatColored,
-          title: Text("error!"),
-          description: Text(next.error!),
-          alignment: Alignment.topRight,
-          autoCloseDuration: const Duration(seconds: 4),
-          borderRadius: BorderRadius.circular(12.0),
-          dragToClose: true,
-          showIcon: false,
-        );
-      }
+      // Error handling sudah ditangani di AuthProvider dengan toastification
     });
 
     return Scaffold(

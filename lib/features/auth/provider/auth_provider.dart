@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:khataman_app/features/profiles/profile_repository.dart';
 import 'package:riverpod/legacy.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:riverpod/riverpod.dart';
+import 'package:toastification/toastification.dart';
 import '../auth_repository.dart';
 
 final supabaseClientProvider = Provider((ref) => Supabase.instance.client);
@@ -49,8 +51,28 @@ class AuthNotifier extends StateNotifier<AuthState> {
       );
 
       state = state.copyWith(isLoading: false, userId: userId);
+
+      // Show success toast
+      toastification.show(
+        title: const Text('Account Created!'),
+        description: const Text(
+          'Welcome! Your account has been created successfully.',
+        ),
+        type: ToastificationType.success,
+        style: ToastificationStyle.fillColored,
+        autoCloseDuration: const Duration(seconds: 3),
+      );
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
+
+      // Show error toast
+      toastification.show(
+        title: const Text('Registration Failed'),
+        description: Text(_getErrorMessage(e.toString())),
+        type: ToastificationType.error,
+        style: ToastificationStyle.fillColored,
+        autoCloseDuration: const Duration(seconds: 4),
+      );
     }
   }
 
@@ -62,14 +84,50 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final user = _repository.getCurrentUser();
 
       state = state.copyWith(isLoading: false, userId: user?.id);
+
+      // Show success toast
+      toastification.show(
+        title: const Text('Welcome Back!'),
+        description: const Text('You have successfully logged in.'),
+        type: ToastificationType.success,
+        style: ToastificationStyle.fillColored,
+        autoCloseDuration: const Duration(seconds: 3),
+      );
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
+
+      // Show error toast
+      toastification.show(
+        title: const Text('Login Failed'),
+        description: Text(_getErrorMessage(e.toString())),
+        type: ToastificationType.error,
+        style: ToastificationStyle.fillColored,
+        autoCloseDuration: const Duration(seconds: 4),
+      );
     }
   }
 
   Future<void> logout() async {
     await _repository.logout();
     state = AuthState();
+  }
+
+  String _getErrorMessage(String error) {
+    if (error.contains('Invalid login credentials')) {
+      return 'Email or password is incorrect. Please try again.';
+    } else if (error.contains('User already registered')) {
+      return 'This email is already registered. Please use a different email.';
+    } else if (error.contains('Password should be at least 6 characters')) {
+      return 'Password must be at least 6 characters long.';
+    } else if (error.contains('Unable to validate email address')) {
+      return 'Please enter a valid email address.';
+    } else if (error.contains('Network request failed')) {
+      return 'Network error. Please check your internet connection.';
+    } else if (error.contains('Email not confirmed')) {
+      return 'Please check your email and confirm your account.';
+    } else {
+      return 'Something went wrong. Please try again.';
+    }
   }
 }
 
