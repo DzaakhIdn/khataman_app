@@ -3,6 +3,7 @@ import 'package:khataman_app/features/auth/pages/signin_screen.dart';
 import 'package:khataman_app/features/auth/pages/signup_screen.dart';
 import 'package:khataman_app/features/splash_screen.dart';
 import 'package:khataman_app/features/home/pages/home_page.dart';
+import 'package:khataman_app/features/target/pages/target_pages.dart';
 
 final appRouter = GoRouter(
   initialLocation: SplashScreen.routeName,
@@ -20,5 +21,9 @@ final appRouter = GoRouter(
       builder: (_, __) => const SignUpScreen(),
     ),
     GoRoute(path: HomePage.routeName, builder: (_, __) => const HomePage()),
+    GoRoute(
+      path: TargetPages.routeName,
+      builder: (_, __) => const TargetPages(),
+    ),
   ],
 );

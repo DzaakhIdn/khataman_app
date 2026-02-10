@@ -52,7 +52,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
       state = state.copyWith(isLoading: false, userId: userId);
 
-      // Show success toast
       toastification.show(
         type: ToastificationType.success,
         style: ToastificationStyle.flatColored,
@@ -67,7 +66,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
 
-      // Show error toast
       toastification.show(
         type: ToastificationType.error,
         style: ToastificationStyle.flatColored,
@@ -91,7 +89,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
       state = state.copyWith(isLoading: false, userId: user?.id);
 
-      // Show success toast
       toastification.show(
         type: ToastificationType.success,
         style: ToastificationStyle.flatColored,
@@ -106,7 +103,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
 
-      // Show error toast
       toastification.show(
         title: const Text('Login Failed'),
         description: Text(_getErrorMessage(e.toString())),

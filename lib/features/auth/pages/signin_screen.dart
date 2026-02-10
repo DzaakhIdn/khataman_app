@@ -6,7 +6,6 @@ import 'package:khataman_app/core/style/app_colors.dart';
 import 'package:khataman_app/features/auth/provider/auth_provider.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:colorful_iconify_flutter/icons/logos.dart';
-import 'package:toastification/toastification.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
   static const routeName = '/signin';
@@ -36,9 +35,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
     ref.listen(authProvider, (previous, next) {
       if (next.userId != null) {
-        context.go('/home');
+        context.go('/target');
       }
-      // Error handling sudah ditangani di AuthProvider dengan toastification
     });
 
     return Scaffold(

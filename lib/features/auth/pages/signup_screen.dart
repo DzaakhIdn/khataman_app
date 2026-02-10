@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:khataman_app/core/style/app_colors.dart';
 import 'package:khataman_app/features/auth/provider/auth_provider.dart';
-import 'package:toastification/toastification.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
   static const routeName = '/signup';
@@ -37,12 +36,12 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
     ref.listen(authProvider, (previous, next) {
       if (next.userId != null) {
-        context.go('/home');
+        context.go('/target');
       }
     });
 
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: const Color.fromARGB(255, 34, 26, 26),
       body: Stack(
         children: [
           // SVG Pattern Decorations
