@@ -12,20 +12,36 @@ class AuthRepository {
     required String password,
     required String username,
   }) async {
-    final authResponse = await _client.auth.signUp(
-      email: email,
-      password: password,
-    );
+    try {
+      // print('🔄 Starting registration for email: $email');
 
-    final user = authResponse.user;
-    if (user == null) {
-      throw Exception('Register gagal');
+      final authResponse = await _client.auth.signUp(
+        email: email,
+        password: password,
+      );
+
+      final user = authResponse.user;
+
+      if (user == null) {
+        throw Exception('Register gagal - user is null');
+      }
+
+      // print('✅ User created with ID: ${user.id}');
+      // print('🔄 Creating profile with username: $username');
+
+      // Insert profile (username only)
+      await _profileRepository.createProfile(
+        userId: user.id,
+        username: username,
+      );
+
+      // print('✅ Profile created successfully');
+
+      return user.id;
+    } catch (e) {
+      // print('❌ Registration error: $e');
+      rethrow;
     }
-
-    // Insert profile (username only)
-    await _profileRepository.createProfile(userId: user.id, username: username);
-
-    return user.id;
   }
 
   Future<void> login({required String email, required String password}) async {

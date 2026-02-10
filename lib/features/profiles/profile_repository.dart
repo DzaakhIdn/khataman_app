@@ -10,13 +10,18 @@ class ProfileRepository {
     required String userId,
     required String username,
   }) async {
-    final response = await _client.from('profiles').insert({
-      'id': userId,
-      'username': username,
-    });
+    try {
+      // print('🔄 Inserting profile - userId: $userId, username: $username');
 
-    if (response.error != null) {
-      throw Exception(response.error!.message);
+      await _client.from('profiles').insert({
+        'id': userId,
+        'username': username,
+      });
+
+      // print('✅ Profile inserted successfully');
+    } catch (e) {
+      // print('❌ Profile creation error: $e');
+      throw Exception('Failed to create profile: ${e.toString()}');
     }
   }
 

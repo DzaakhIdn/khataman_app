@@ -54,24 +54,30 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
       // Show success toast
       toastification.show(
-        title: const Text('Account Created!'),
-        description: const Text(
-          'Welcome! Your account has been created successfully.',
-        ),
         type: ToastificationType.success,
-        style: ToastificationStyle.fillColored,
-        autoCloseDuration: const Duration(seconds: 3),
+        style: ToastificationStyle.flatColored,
+        title: Text("Akun berhasil dibuat!"),
+        description: Text("Selamat datang teman ku☺️"),
+        alignment: Alignment.topRight,
+        autoCloseDuration: const Duration(seconds: 4),
+        borderRadius: BorderRadius.circular(12.0),
+        dragToClose: true,
+        showIcon: false,
       );
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
 
       // Show error toast
       toastification.show(
-        title: const Text('Registration Failed'),
-        description: Text(_getErrorMessage(e.toString())),
         type: ToastificationType.error,
-        style: ToastificationStyle.fillColored,
+        style: ToastificationStyle.flatColored,
+        title: Text("terjadi kesalahan"),
+        description: Text(_getErrorMessage(e.toString())),
+        alignment: Alignment.topRight,
         autoCloseDuration: const Duration(seconds: 4),
+        borderRadius: BorderRadius.circular(12.0),
+        dragToClose: true,
+        showIcon: false,
       );
     }
   }
@@ -87,11 +93,15 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
       // Show success toast
       toastification.show(
-        title: const Text('Welcome Back!'),
-        description: const Text('You have successfully logged in.'),
         type: ToastificationType.success,
-        style: ToastificationStyle.fillColored,
-        autoCloseDuration: const Duration(seconds: 3),
+        style: ToastificationStyle.flatColored,
+        title: Text("Login berhasil!"),
+        description: Text("Selamat datang kembali☺️"),
+        alignment: Alignment.topRight,
+        autoCloseDuration: const Duration(seconds: 4),
+        borderRadius: BorderRadius.circular(12.0),
+        dragToClose: true,
+        showIcon: false,
       );
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
@@ -114,19 +124,25 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   String _getErrorMessage(String error) {
     if (error.contains('Invalid login credentials')) {
-      return 'Email or password is incorrect. Please try again.';
+      return 'password atau email salah';
     } else if (error.contains('User already registered')) {
-      return 'This email is already registered. Please use a different email.';
+      return 'Email udah terdaftar!, coba pake email lain';
     } else if (error.contains('Password should be at least 6 characters')) {
-      return 'Password must be at least 6 characters long.';
+      return 'password harus lebih panjang';
     } else if (error.contains('Unable to validate email address')) {
-      return 'Please enter a valid email address.';
+      return 'tolong masukan email yang bener';
     } else if (error.contains('Network request failed')) {
-      return 'Network error. Please check your internet connection.';
+      return 'Kesalahan jaringan, cek koneksi mu!';
     } else if (error.contains('Email not confirmed')) {
       return 'Please check your email and confirm your account.';
+    } else if (error.contains('Failed to create profile')) {
+      return 'Akun berhasil dibuat tapi gagal :v';
+    } else if (error.contains('duplicate key value')) {
+      return 'Akun nya udah ada!';
+    } else if (error.contains('violates foreign key constraint')) {
+      return 'Database constraint error. Please try again.';
     } else {
-      return 'Something went wrong. Please try again.';
+      return 'Terjadi kesalahan';
     }
   }
 }

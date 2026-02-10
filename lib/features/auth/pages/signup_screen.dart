@@ -35,13 +35,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     final authState = ref.watch(authProvider);
     final authNotifier = ref.read(authProvider.notifier);
 
-    // Listen untuk perubahan state
     ref.listen(authProvider, (previous, next) {
       if (next.userId != null) {
-        // Signup berhasil, redirect ke home
         context.go('/home');
       }
-      // Error handling sudah ditangani di AuthProvider dengan toastification
     });
 
     return Scaffold(
