@@ -13,16 +13,26 @@ class TargetController extends StateNotifier<AsyncValue<void>> {
 
   TargetController(this._repo) : super(const AsyncData(null));
 
-  Future<void> saveTarget(int totalKhatam, int totalHalaman) async {
+  Future<void> saveTarget(
+    int totalKhatam,
+    int totalHalaman,
+    int ramadhanYear,
+  ) async {
     state = const AsyncLoading();
     try {
+      print('🔄 Controller: Saving target...');
       await _repo.createTarget(
         totalKhatam: totalKhatam,
         totalHalaman: totalHalaman,
+        ramadhanYear: ramadhanYear,
       );
+      print('✅ Controller: Target saved successfully');
       state = const AsyncData(null);
     } catch (e, st) {
+      print('❌ Controller: Error saving target: $e');
+      print('Stack trace: $st');
       state = AsyncError(e, st);
+      rethrow; // Rethrow agar bisa di-catch di UI
     }
   }
 }

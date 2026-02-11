@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hijriyah_indonesia/hijriyah_indonesia.dart';
 import 'package:khataman_app/core/style/app_colors.dart';
 import 'package:toastification/toastification.dart';
 import 'package:khataman_app/features/target/controller/target_controller.dart';
@@ -480,31 +481,29 @@ class _TargetPagesState extends ConsumerState<TargetPages> {
 
     final halamanPerDay = calculateJuzPerDay(targetKhatam);
     final totalHalamanTarget = totalHalaman * targetKhatam;
+    final currentRamadan = Hijriyah.now().hYear;
 
-    debugPrint('Target Khatam: $targetKhatam');
-    debugPrint('Halaman per day: $halamanPerDay');
-    debugPrint('Total Halaman Target: $totalHalamanTarget');
+    // debugPrint('Target Khatam: $targetKhatam');
+    // debugPrint('Halaman per day: $halamanPerDay');
+    // debugPrint('Total Halaman Target: $totalHalamanTarget');
 
     try {
       await ref
           .read(targetControllerProvider.notifier)
-          .saveTarget(targetKhatam, totalHalamanTarget.toInt());
+          .saveTarget(targetKhatam, totalHalamanTarget.toInt(), currentRamadan);
 
-      // Show success toast
       if (mounted) {
         toastification.show(
           type: ToastificationType.success,
-          style: ToastificationStyle.fillColored,
-          title: const Text("Target Set!"),
-          description: Text(
-            "Your goal is to read $halamanPerDay halaman per day",
-          ),
+          style: ToastificationStyle.flatColored,
+          title: Text("Target sudah di set"),
+          description: Text("Bersemangatlah dalam menggapai target☺️"),
           alignment: Alignment.topRight,
-          autoCloseDuration: const Duration(seconds: 3),
-          borderRadius: BorderRadius.circular(12.0),
+          autoCloseDuration: const Duration(seconds: 4),
+          dragToClose: true,
+          showIcon: false,
         );
 
-        // Navigate to home after success
         Future.delayed(const Duration(milliseconds: 500), () {
           if (mounted) {
             context.go('/home');

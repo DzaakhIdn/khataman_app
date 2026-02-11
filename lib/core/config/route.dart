@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:khataman_app/core/widget/side_menu.dart';
 import 'package:khataman_app/features/auth/pages/signin_screen.dart';
 import 'package:khataman_app/features/auth/pages/signup_screen.dart';
 import 'package:khataman_app/features/splash_screen.dart';
@@ -25,5 +26,6 @@ final appRouter = GoRouter(
       path: TargetPages.routeName,
       builder: (_, __) => const TargetPages(),
     ),
+    GoRoute(path: SideMenu.routeName, builder: (_, __) => const SideMenu()),
   ],
 );

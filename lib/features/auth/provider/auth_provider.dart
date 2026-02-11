@@ -104,11 +104,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
       state = state.copyWith(isLoading: false, error: e.toString());
 
       toastification.show(
-        title: const Text('Login Failed'),
-        description: Text(_getErrorMessage(e.toString())),
         type: ToastificationType.error,
-        style: ToastificationStyle.fillColored,
+        style: ToastificationStyle.flatColored,
+        title: Text("Terjadi Kesalahan!"),
+        description: Text(_getErrorMessage(e.toString())),
+        alignment: Alignment.topRight,
         autoCloseDuration: const Duration(seconds: 4),
+        dragToClose: true,
+        showIcon: false,
       );
     }
   }
