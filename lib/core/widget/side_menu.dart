@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/legacy.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:khataman_app/core/style/app_colors.dart';
 import 'package:khataman_app/core/widget/models/side_menu_assets.dart';
 import 'package:khataman_app/features/auth/provider/auth_provider.dart';
 import 'info_profile.dart';
-import '../style/icon_sets.dart';
 import 'side_menu_tile.dart';
 
 class SideMenu extends ConsumerStatefulWidget {
