@@ -44,6 +44,7 @@ dependencies:
   flutter_riverpod: ^3.2.1
   toastification: ^3.0.3
   hijriyah_indonesia: ^0.1.7
+  rive: ^0.14.2
 
 dev_dependencies:
   flutter_test:
