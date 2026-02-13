@@ -1,4 +1,5 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'models/target_model.dart';
 
 class TargetRepository {
   final SupabaseClient _client;
@@ -50,5 +51,26 @@ class TargetRepository {
         .maybeSingle();
 
     return data != null;
+  }
+
+  Future<TargetModel> getActiveTarget() async {
+    final user = _client.auth.currentUser;
+
+    if (user == null) {
+      throw Exception('User belum login');
+    }
+
+    final data = await _client
+        .from('targets')
+        .select()
+        .eq('user_id', user.id)
+        .eq('is_active', true)
+        .maybeSingle();
+
+    if (data == null) {
+      throw Exception('Tidak ada target aktif');
+    }
+
+    return TargetModel.fromJson(data);
   }
 }

@@ -1,15 +1,18 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:khataman_app/core/style/app_colors.dart';
 import 'package:khataman_app/core/utils/rive_utils.dart';
 import 'package:khataman_app/core/widget/menu_btn.dart';
 import 'package:khataman_app/core/widget/side_menu.dart';
-import 'package:khataman_app/features/home/pages/home_page.dart';
 import 'package:rive/rive.dart';
 
 class Entry extends ConsumerStatefulWidget {
   static const routeName = '/entry';
-  const Entry({super.key});
+  final Widget child;
+
+  const Entry({super.key, required this.child});
 
   @override
   ConsumerState<Entry> createState() => _EntryState();
@@ -18,11 +21,13 @@ class Entry extends ConsumerStatefulWidget {
 class _EntryState extends ConsumerState<Entry>
     with SingleTickerProviderStateMixin {
   SMIBool? isSideBarClosed;
-  late AnimationController _animationController;
-  late Animation<double> animation;
+  AnimationController? _animationController;
+  Animation<double>? animation;
+  Animation<double>? scaleAnimation;
 
   @override
   void initState() {
+    super.initState();
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 200))
           ..addListener(() {
@@ -30,20 +35,25 @@ class _EntryState extends ConsumerState<Entry>
           });
     animation = Tween<double>(begin: 0, end: 1).animate(
       CurvedAnimation(
-        parent: _animationController,
+        parent: _animationController!,
         curve: Curves.fastOutSlowIn,
       ),
     );
-    super.initState();
+    scaleAnimation = Tween<double>(begin: 1, end: 0.9).animate(
+      CurvedAnimation(
+        parent: _animationController!,
+        curve: Curves.fastOutSlowIn,
+      ),
+    );
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _animationController?.dispose();
     super.dispose();
   }
 
-  bool isSideMenuClosed = false;
+  bool isSideMenuClosed = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,17 +64,25 @@ class _EntryState extends ConsumerState<Entry>
             duration: Duration(milliseconds: 200),
             curve: Curves.fastOutSlowIn,
             width: 288,
-            left: isSideMenuClosed ? 288 : 0,
+            left: isSideMenuClosed ? -288 : 0,
             height: MediaQuery.of(context).size.height,
             child: SideMenu(),
           ),
-          Transform.translate(
-            offset: Offset(animation.value * 288, 0),
-            child: Transform.scale(
-              scale: isSideMenuClosed ? 1 : 0.9,
+          Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.identity()
+              ..setEntry(3, 2, 0.001)
+              ..rotateY(animation!.value - 30 * animation!.value * pi / 180),
+            child: Transform(
+              transform: Matrix4.identity()
+                ..translate((animation?.value ?? 0) * 265)
+                ..scale((scaleAnimation?.value ?? 1.0)),
+              alignment: Alignment.center,
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(isSideMenuClosed ? 0 : 24),
-                child: const HomePage(),
+                borderRadius: BorderRadius.circular(
+                  (animation?.value ?? 0) * 24,
+                ),
+                child: widget.child,
               ),
             ),
           ),
@@ -82,14 +100,16 @@ class _EntryState extends ConsumerState<Entry>
               }
             },
             press: () {
-              isSideBarClosed!.value = !isSideBarClosed!.value;
+              isSideBarClosed?.value = !(isSideBarClosed?.value ?? true);
+
               if (isSideMenuClosed) {
-                _animationController.forward();
+                _animationController?.forward();
               } else {
-                _animationController.reverse();
+                _animationController?.reverse();
               }
+
               setState(() {
-                isSideMenuClosed = isSideBarClosed!.value;
+                isSideMenuClosed = !isSideMenuClosed;
               });
             },
           ),

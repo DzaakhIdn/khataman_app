@@ -13,11 +13,11 @@ class menuButton extends StatelessWidget {
       child: GestureDetector(
         onTap: press,
         child: Container(
-          margin: EdgeInsets.only(left: 16),
-          width: 40,
-          height: 40,
+          margin: EdgeInsets.only(left: 16, top: 16),
+          width: 45,
+          height: 45,
           decoration: const BoxDecoration(
-            color: Color(0xFF10B981),
+            color: Color.fromARGB(172, 16, 185, 129),
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(

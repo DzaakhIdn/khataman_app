@@ -22,7 +22,7 @@ class _SideMenuState extends ConsumerState<SideMenu> {
   void _handleMenuNavigation(SideMenuAssets menu) {
     switch (menu.title) {
       case "Home":
-        // context.go('/home');
+        context.go('/home');
         break;
       case "History":
         // TODO: Navigate to history
@@ -39,9 +39,23 @@ class _SideMenuState extends ConsumerState<SideMenu> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
+    final userId = authState.userId;
 
-    final userName = authState.userId != null ? "User" : "Guest";
-    final userProfession = "not set";
+    // Fetch profile jika user sudah login
+    final profileAsync = userId != null
+        ? ref.watch(userProfileProvider(userId))
+        : null;
+
+    final userName =
+        profileAsync?.when(
+          data: (profile) => profile?['username'] ?? 'User',
+          loading: () => 'Loading...',
+          error: (_, __) => 'User',
+        ) ??
+        'Guest';
+
+    final supabaseClient = ref.read(supabaseClientProvider);
+    final userEmail = supabaseClient.auth.currentUser?.email ?? 'not set';
 
     return Scaffold(
       body: Container(
@@ -52,7 +66,8 @@ class _SideMenuState extends ConsumerState<SideMenu> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              infoProfile(name: userName, profesion: userProfession),
+              SizedBox(height: 60),
+              infoProfile(name: userName, profesion: userEmail),
               Padding(
                 padding: const EdgeInsets.only(left: 24, top: 32, bottom: 16),
                 child: Text(

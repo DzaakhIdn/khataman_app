@@ -6,7 +6,6 @@ import 'package:hijriyah_indonesia/hijriyah_indonesia.dart';
 import 'package:khataman_app/core/style/app_colors.dart';
 import 'package:toastification/toastification.dart';
 import 'package:khataman_app/features/target/controller/target_controller.dart';
-import 'package:toastification/toastification.dart';
 
 class TargetPages extends ConsumerStatefulWidget {
   static const routeName = '/target';

@@ -12,6 +12,7 @@ class infoProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      
       leading: CircleAvatar(
         backgroundColor: Colors.white24,
         child: Iconify(Ph.user_duotone, color: Colors.white),

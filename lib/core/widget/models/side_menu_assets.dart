@@ -10,6 +10,7 @@ class SideMenuAssets {
 List<SideMenuAssets> asetIcon = [
   SideMenuAssets(title: "Home", icon: homeIcon),
   SideMenuAssets(title: "History", icon: historyIcon),
+  SideMenuAssets(title: "Statistik", icon: chartIcon),
   SideMenuAssets(title: "Settings", icon: settingIcon),
   SideMenuAssets(title: "About", icon: infoIcon),
 ];

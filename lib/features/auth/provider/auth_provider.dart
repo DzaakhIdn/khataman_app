@@ -149,3 +149,10 @@ class AuthNotifier extends StateNotifier<AuthState> {
 final authProvider = StateNotifierProvider<AuthNotifier, AuthState>(
   (ref) => AuthNotifier(ref.read(authRepositoryProvider)),
 );
+
+// Provider untuk fetch profile user
+final userProfileProvider =
+    FutureProvider.family<Map<String, dynamic>?, String>((ref, userId) async {
+      final profileRepo = ref.read(profileRepositoryProvider);
+      return await profileRepo.getProfile(userId);
+    });

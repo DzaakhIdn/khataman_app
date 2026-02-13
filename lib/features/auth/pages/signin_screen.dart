@@ -35,7 +35,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
     ref.listen(authProvider, (previous, next) {
       if (next.userId != null) {
-        context.go('/entry');
+        context.go('/home');
       }
     });
 

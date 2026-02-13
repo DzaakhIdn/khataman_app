@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
-import 'package:khataman_app/core/style/app_colors.dart';
 import 'package:khataman_app/core/widget/models/side_menu_assets.dart';
 
 class sideMenuTile extends StatelessWidget {
@@ -34,8 +33,11 @@ class sideMenuTile extends StatelessWidget {
               left: 0,
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(10),
+                  color: Color(0xFF10B981),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                  ),
                 ),
               ),
             ),
@@ -44,12 +46,18 @@ class sideMenuTile extends StatelessWidget {
               leading: SizedBox(
                 height: 34,
                 width: 34,
-                child: Iconify(menu.icon, color: Colors.black38),
+                child: Iconify(
+                  menu.icon,
+                  color: isActive ? Colors.white : Colors.white70,
+                ),
               ),
               title: Text(
                 menu.title,
                 style: GoogleFonts.raleway(
-                  textStyle: TextStyle(color: AppColors.light.textPrimary),
+                  textStyle: TextStyle(
+                    color: isActive ? Colors.white : Colors.white70,
+                    fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+                  ),
                 ),
               ),
             ),
