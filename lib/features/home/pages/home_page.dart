@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hijriyah_indonesia/hijriyah_indonesia.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
@@ -357,7 +358,7 @@ class HomePage extends ConsumerWidget {
                           height: 56,
                           child: ElevatedButton.icon(
                             onPressed: () {
-                              // TODO: Navigate to reading session
+                              context.pushNamed("/timer");
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color(0xFF10B981),

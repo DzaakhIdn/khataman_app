@@ -5,6 +5,7 @@ import 'package:khataman_app/features/entry.dart';
 import 'package:khataman_app/features/splash_screen.dart';
 import 'package:khataman_app/features/home/pages/home_page.dart';
 import 'package:khataman_app/features/target/pages/target_pages.dart';
+import 'package:khataman_app/features/timer/pages/timer_page.dart';
 
 final appRouter = GoRouter(
   initialLocation: SplashScreen.routeName,
@@ -29,6 +30,10 @@ final appRouter = GoRouter(
       builder: (context, state, child) => Entry(child: child),
       routes: [
         GoRoute(path: HomePage.routeName, builder: (_, __) => HomePage()),
+        GoRoute(
+          path: ReadingSessionPage.routeName,
+          builder: (_, __) => ReadingSessionPage(),
+        ),
       ],
     ),
   ],
