@@ -15,7 +15,7 @@ final homeControllerProvider = FutureProvider<HomeStats>((ref) async {
 
   final streak = await homeRepo.getStreak(activeTarget.id);
 
-  final progress = totalRead / totalTargetPages;
+  final progress = totalRead.toDouble() / totalTargetPages.toDouble();
 
   return HomeStats(
     totalPagesRead: totalRead,

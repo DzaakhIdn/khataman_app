@@ -22,6 +22,17 @@ class ReadingTimerController extends StateNotifier<int> {
     _timer?.cancel();
   }
 
+  void reset() {
+    _timer?.cancel();
+    state = _duration * 60;
+  }
+
+  void setDuration(int minutes) {
+    _timer?.cancel();
+    _duration = minutes;
+    state = _duration * 60;
+  }
+
   int get durationMinutes => _duration;
 }
 

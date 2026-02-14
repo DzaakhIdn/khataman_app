@@ -19,7 +19,12 @@ class HomeRepository {
 
     int total = 0;
     for (var item in data) {
-      total += item['pages_read'] as int;
+      final pages = item['pages_read'];
+      if (pages is int) {
+        total += pages;
+      } else if (pages is double) {
+        total += pages.toInt();
+      }
     }
 
     return total;
@@ -73,6 +78,39 @@ class HomeRepository {
 
     if (data == null) return 0;
 
-    return data['pages_read'] as int;
+    final pages = data['pages_read'];
+    if (pages is int) {
+      return pages;
+    } else if (pages is double) {
+      return pages.toInt();
+    }
+    return 0;
+  }
+
+  Future<double> getTotalJuzRead(String targetId) async {
+    final user = _client.auth.currentUser;
+    if (user == null) return 0;
+
+    final data = await _client
+        .from('reading_sessions')
+        .select('juz_from, juz_to')
+        .eq('user_id', user.id)
+        .eq('target_id', targetId);
+
+    if (data.isEmpty) return 0;
+
+    double total = 0;
+    for (var item in data) {
+      final juzFrom = item['juz_from'];
+      final juzTo = item['juz_to'];
+
+      if (juzFrom != null && juzTo != null) {
+        double from = juzFrom is int ? juzFrom.toDouble() : juzFrom as double;
+        double to = juzTo is int ? juzTo.toDouble() : juzTo as double;
+        total += (to - from);
+      }
+    }
+
+    return total;
   }
 }

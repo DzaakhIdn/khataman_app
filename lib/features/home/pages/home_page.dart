@@ -20,7 +20,8 @@ class HomePage extends ConsumerWidget {
     final statsAsync = ref.watch(homeControllerProvider);
     final hijriDate = Hijriyah.now();
 
-    final isRamadan = hijriDate.hMonth == 9;
+    // Cek apakah sedang bulan Ramadan (bulan ke-9)
+    final isRamadan = hijriDate.hMonth.toInt() == 9;
 
     return Scaffold(
       backgroundColor: Color(0xFFF5F5F5),
@@ -39,10 +40,10 @@ class HomePage extends ConsumerWidget {
 
               final targetId = targetSnapshot.data!.id;
               final todayPagesAsync = ref.watch(todayPagesProvider(targetId));
+              final totalJuzAsync = ref.watch(totalJuzProvider(targetId));
 
-              final ramadanDay = hijriDate.hDay;
+              final ramadanDay = hijriDate.hDay.toInt();
               final progressPercent = (stats.progress * 100).toInt();
-              final juzRead = (stats.totalPagesRead / 20).floor();
 
               // Hitung hari ke Ramadan atau sisa hari Ramadan
               int daysInfo;
@@ -54,8 +55,8 @@ class HomePage extends ConsumerWidget {
               } else {
                 // Hitung hari sampai Ramadan berikutnya (estimasi)
                 final ramadanMonth = 9;
-                final currentMonth = hijriDate.hMonth;
-                final currentDay = hijriDate.hDay;
+                final currentMonth = hijriDate.hMonth.toInt();
+                final currentDay = hijriDate.hDay.toInt();
 
                 if (currentMonth < ramadanMonth) {
                   // Ramadan tahun ini
@@ -174,12 +175,30 @@ class HomePage extends ConsumerWidget {
                                     ),
                                   ),
                                   const SizedBox(height: 16),
-                                  Text(
-                                    '$juzRead Juz read',
-                                    style: GoogleFonts.raleway(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black54,
+                                  totalJuzAsync.when(
+                                    data: (juzRead) => Text(
+                                      '${juzRead.toStringAsFixed(1)} Juz read',
+                                      style: GoogleFonts.raleway(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    loading: () => Text(
+                                      'Loading...',
+                                      style: GoogleFonts.raleway(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    error: (_, __) => Text(
+                                      '0 Juz read',
+                                      style: GoogleFonts.raleway(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.black54,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -358,7 +377,7 @@ class HomePage extends ConsumerWidget {
                           height: 56,
                           child: ElevatedButton.icon(
                             onPressed: () {
-                              context.pushNamed("/timer");
+                              context.push('/timer');
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color(0xFF10B981),

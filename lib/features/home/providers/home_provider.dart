@@ -50,3 +50,12 @@ final todayPagesProvider = FutureProvider.family<int, String>((
   final repo = ref.read(homeRepositoryProvider);
   return repo.getTodayPagesRead(targetId);
 });
+
+// Provider untuk get total juz read
+final totalJuzProvider = FutureProvider.family<double, String>((
+  ref,
+  targetId,
+) async {
+  final repo = ref.read(homeRepositoryProvider);
+  return repo.getTotalJuzRead(targetId);
+});
