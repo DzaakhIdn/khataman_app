@@ -7,33 +7,39 @@ import 'package:khataman_app/features/timer/models/timer_model.dart';
 import 'package:khataman_app/features/timer/timer_repository.dart';
 import 'package:khataman_app/features/home/providers/home_controller.dart';
 import 'package:khataman_app/features/home/providers/home_provider.dart';
+import 'package:khataman_app/features/history/providers/history_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:toastification/toastification.dart';
 
 void showEndSessionDialog(BuildContext context, WidgetRef ref) {
-  final pagesController = TextEditingController();
+  final pageFromController = TextEditingController();
+  final pageToController = TextEditingController();
   final juzFromController = TextEditingController();
   final juzToController = TextEditingController();
 
-  // State untuk tracking last valid position
-  double currentJuzPosition = 0.0;
+  int totalPages = 0;
+  double totalJuz = 0.0;
 
-  void calculateJuzFromPages() {
-    final pages = int.tryParse(pagesController.text);
-    if (pages == null || pages <= 0) return;
+  void calculateFromPages() {
+    final pageFrom = int.tryParse(pageFromController.text);
+    final pageTo = int.tryParse(pageToController.text);
 
-    // 1 juz = 20 halaman
-    final juzRead = pages / 20.0;
+    if (pageFrom == null || pageTo == null) return;
+    if (pageFrom > pageTo) return;
 
-    // Set juz_from ke posisi terakhir
-    juzFromController.text = currentJuzPosition.toStringAsFixed(2);
+    // Hitung total halaman
+    totalPages = pageTo - pageFrom + 1;
 
-    // Set juz_to = juz_from + juz yang dibaca
-    final newPosition = currentJuzPosition + juzRead;
-    juzToController.text = newPosition.toStringAsFixed(2);
+    // Hitung juz (1 juz = 20 halaman)
+    // pageFrom menentukan juz_from
+    final juzFrom = (pageFrom - 1) / 20.0;
+    // pageTo menentukan juz_to
+    final juzTo = pageTo / 20.0;
 
-    // Update current position untuk session berikutnya
-    currentJuzPosition = newPosition;
+    juzFromController.text = juzFrom.toStringAsFixed(2);
+    juzToController.text = juzTo.toStringAsFixed(2);
+
+    totalJuz = juzTo - juzFrom;
   }
 
   showModalBottomSheet(
@@ -109,9 +115,9 @@ void showEndSessionDialog(BuildContext context, WidgetRef ref) {
 
                 const SizedBox(height: 24),
 
-                // Pages Read Input
+                // Page Range Input
                 Text(
-                  'Pages Read *',
+                  'Page Range *',
                   style: GoogleFonts.raleway(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
@@ -119,155 +125,171 @@ void showEndSessionDialog(BuildContext context, WidgetRef ref) {
                   ),
                 ),
                 const SizedBox(height: 8),
-                TextField(
-                  controller: pagesController,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  style: GoogleFonts.raleway(fontSize: 16),
-                  decoration: InputDecoration(
-                    hintText: 'Enter number of pages (1-604)',
-                    hintStyle: GoogleFonts.raleway(color: Colors.black38),
-                    filled: true,
-                    fillColor: Color(0xFFF5F5F5),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 16,
-                    ),
-                    suffixIcon: IconButton(
-                      icon: Icon(Icons.calculate, color: Color(0xFF10B981)),
-                      onPressed: () {
-                        setState(() {
-                          calculateJuzFromPages();
-                        });
-                      },
-                      tooltip: 'Calculate Juz',
-                    ),
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      calculateJuzFromPages();
-                    });
-                  },
-                ),
 
-                const SizedBox(height: 20),
-
-                // Info text
-                Container(
-                  padding: EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Color(0xFFE8F5E9),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.info_outline,
-                        size: 16,
-                        color: Color(0xFF10B981),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          '1 Juz = 20 pages. Juz will be calculated automatically.',
-                          style: GoogleFonts.raleway(
-                            fontSize: 12,
-                            color: Colors.black54,
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: pageFromController,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        style: GoogleFonts.raleway(fontSize: 16),
+                        decoration: InputDecoration(
+                          hintText: 'From page',
+                          hintStyle: GoogleFonts.raleway(color: Colors.black38),
+                          filled: true,
+                          fillColor: Color(0xFFF5F5F5),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 16,
                           ),
                         ),
+                        onChanged: (value) {
+                          setState(() {
+                            calculateFromPages();
+                          });
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Icon(Icons.arrow_forward, color: Colors.black45),
+                    ),
+                    Expanded(
+                      child: TextField(
+                        controller: pageToController,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        style: GoogleFonts.raleway(fontSize: 16),
+                        decoration: InputDecoration(
+                          hintText: 'To page',
+                          hintStyle: GoogleFonts.raleway(color: Colors.black38),
+                          filled: true,
+                          fillColor: Color(0xFFF5F5F5),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 16,
+                          ),
+                        ),
+                        onChanged: (value) {
+                          setState(() {
+                            calculateFromPages();
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
+
+                const SizedBox(height: 16),
+
+                // Summary Info
+                if (totalPages > 0)
+                  Container(
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Color(0xFFE8F5E9),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.info_outline,
+                          size: 16,
+                          color: Color(0xFF10B981),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Total: $totalPages pages • ${totalJuz.toStringAsFixed(2)} Juz',
+                            style: GoogleFonts.raleway(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF10B981),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
 
                 const SizedBox(height: 20),
 
                 // Juz Range (Read-only, auto-calculated)
+                Text(
+                  'Juz Range (Auto-calculated)',
+                  style: GoogleFonts.raleway(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 8),
+
                 Row(
                   children: [
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'From Juz',
-                            style: GoogleFonts.raleway(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black87,
-                            ),
+                      child: TextField(
+                        controller: juzFromController,
+                        readOnly: true,
+                        style: GoogleFonts.raleway(
+                          fontSize: 16,
+                          color: Colors.black45,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'From Juz',
+                          hintStyle: GoogleFonts.raleway(color: Colors.black38),
+                          filled: true,
+                          fillColor: Color(0xFFF5F5F5),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
                           ),
-                          const SizedBox(height: 8),
-                          TextField(
-                            controller: juzFromController,
-                            readOnly: true,
-                            style: GoogleFonts.raleway(
-                              fontSize: 16,
-                              color: Colors.black45,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: 'Auto',
-                              hintStyle: GoogleFonts.raleway(
-                                color: Colors.black38,
-                              ),
-                              filled: true,
-                              fillColor: Color(0xFFF5F5F5),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide.none,
-                              ),
-                              contentPadding: EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 16,
-                              ),
-                            ),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 16,
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: Icon(Icons.arrow_forward, color: Colors.black45),
+                    ),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'To Juz',
-                            style: GoogleFonts.raleway(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black87,
-                            ),
+                      child: TextField(
+                        controller: juzToController,
+                        readOnly: true,
+                        style: GoogleFonts.raleway(
+                          fontSize: 16,
+                          color: Colors.black45,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'To Juz',
+                          hintStyle: GoogleFonts.raleway(color: Colors.black38),
+                          filled: true,
+                          fillColor: Color(0xFFF5F5F5),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
                           ),
-                          const SizedBox(height: 8),
-                          TextField(
-                            controller: juzToController,
-                            readOnly: true,
-                            style: GoogleFonts.raleway(
-                              fontSize: 16,
-                              color: Colors.black45,
-                            ),
-                            decoration: InputDecoration(
-                              hintText: 'Auto',
-                              hintStyle: GoogleFonts.raleway(
-                                color: Colors.black38,
-                              ),
-                              filled: true,
-                              fillColor: Color(0xFFF5F5F5),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide.none,
-                              ),
-                              contentPadding: EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 16,
-                              ),
-                            ),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 16,
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ],
@@ -282,15 +304,45 @@ void showEndSessionDialog(BuildContext context, WidgetRef ref) {
                   child: ElevatedButton(
                     onPressed: () async {
                       // Validasi
-                      final pages = int.tryParse(pagesController.text);
-                      if (pages == null || pages <= 0) {
+                      final pageFrom = int.tryParse(pageFromController.text);
+                      final pageTo = int.tryParse(pageToController.text);
+
+                      if (pageFrom == null || pageTo == null) {
+                        toastification.show(
+                          context: context,
+                          type: ToastificationType.error,
+                          style: ToastificationStyle.flatColored,
+                          title: Text("Invalid Input"),
+                          description: Text("Please enter valid page numbers"),
+                          alignment: Alignment.topRight,
+                          autoCloseDuration: const Duration(seconds: 3),
+                          borderRadius: BorderRadius.circular(12.0),
+                        );
+                        return;
+                      }
+
+                      if (pageFrom < 1 || pageTo < 1) {
+                        toastification.show(
+                          context: context,
+                          type: ToastificationType.error,
+                          style: ToastificationStyle.flatColored,
+                          title: Text("Invalid Input"),
+                          description: Text("Page numbers must be at least 1"),
+                          alignment: Alignment.topRight,
+                          autoCloseDuration: const Duration(seconds: 3),
+                          borderRadius: BorderRadius.circular(12.0),
+                        );
+                        return;
+                      }
+
+                      if (pageFrom > pageTo) {
                         toastification.show(
                           context: context,
                           type: ToastificationType.error,
                           style: ToastificationStyle.flatColored,
                           title: Text("Invalid Input"),
                           description: Text(
-                            "Please enter valid number of pages",
+                            "'From page' must be less than or equal to 'To page'",
                           ),
                           alignment: Alignment.topRight,
                           autoCloseDuration: const Duration(seconds: 3),
@@ -299,14 +351,14 @@ void showEndSessionDialog(BuildContext context, WidgetRef ref) {
                         return;
                       }
 
-                      if (pages > 604) {
+                      if (pageTo > 604) {
                         toastification.show(
                           context: context,
                           type: ToastificationType.error,
                           style: ToastificationStyle.flatColored,
                           title: Text("Invalid Input"),
                           description: Text(
-                            "Pages cannot exceed 604 (total Quran pages)",
+                            "Page cannot exceed 604 (total Quran pages)",
                           ),
                           alignment: Alignment.topRight,
                           autoCloseDuration: const Duration(seconds: 3),
@@ -323,24 +375,8 @@ void showEndSessionDialog(BuildContext context, WidgetRef ref) {
                           context: context,
                           type: ToastificationType.error,
                           style: ToastificationStyle.flatColored,
-                          title: Text("Invalid Input"),
-                          description: Text(
-                            "Please enter pages to calculate Juz",
-                          ),
-                          alignment: Alignment.topRight,
-                          autoCloseDuration: const Duration(seconds: 3),
-                          borderRadius: BorderRadius.circular(12.0),
-                        );
-                        return;
-                      }
-
-                      if (juzTo > 30) {
-                        toastification.show(
-                          context: context,
-                          type: ToastificationType.error,
-                          style: ToastificationStyle.flatColored,
-                          title: Text("Invalid Input"),
-                          description: Text("Juz cannot exceed 30"),
+                          title: Text("Calculation Error"),
+                          description: Text("Please check your page range"),
                           alignment: Alignment.topRight,
                           autoCloseDuration: const Duration(seconds: 3),
                           borderRadius: BorderRadius.circular(12.0),
@@ -372,7 +408,7 @@ void showEndSessionDialog(BuildContext context, WidgetRef ref) {
                         userId: user.id,
                         sessionDate: DateTime.now(),
                         durationMinutes: timer.durationMinutes,
-                        pagesRead: pages.toDouble(),
+                        pagesRead: totalPages.toDouble(),
                         juzFrom: juzFrom,
                         juzTo: juzTo,
                         targetId: targetId,
@@ -387,6 +423,7 @@ void showEndSessionDialog(BuildContext context, WidgetRef ref) {
                         ref.invalidate(streakProvider(targetId));
                         ref.invalidate(totalPagesProvider(targetId));
                         ref.invalidate(totalJuzProvider(targetId));
+                        ref.invalidate(readingHistoryProvider(targetId));
                       }
 
                       toastification.show(
@@ -395,7 +432,7 @@ void showEndSessionDialog(BuildContext context, WidgetRef ref) {
                         style: ToastificationStyle.flatColored,
                         title: Text("Session Saved!"),
                         description: Text(
-                          "Your reading progress has been recorded",
+                          "$totalPages pages • ${totalJuz.toStringAsFixed(2)} Juz recorded",
                         ),
                         alignment: Alignment.topRight,
                         autoCloseDuration: const Duration(seconds: 3),

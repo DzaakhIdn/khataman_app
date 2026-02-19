@@ -25,7 +25,10 @@ class _SideMenuState extends ConsumerState<SideMenu> {
         context.go('/home');
         break;
       case "History":
-        // TODO: Navigate to history
+        context.go('/history');
+        break;
+      case "Statistik":
+        context.go('/statistics');
         break;
       case "Settings":
         // TODO: Navigate to settings

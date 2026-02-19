@@ -14,13 +14,12 @@ class ReadingSessionPage extends ConsumerStatefulWidget {
 }
 
 class _ReadingSessionPageState extends ConsumerState<ReadingSessionPage> {
-  int selectedDuration = 15; // Default 15 minutes
+  int selectedDuration = 15;
   bool isRunning = false;
 
   @override
   void initState() {
     super.initState();
-    // Set timer sesuai durasi yang dipilih
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(readingTimerProvider.notifier).setDuration(selectedDuration);
     });

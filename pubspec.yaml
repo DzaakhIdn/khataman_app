@@ -45,6 +45,7 @@ dependencies:
   toastification: ^3.0.3
   hijriyah_indonesia: ^0.1.7
   rive: ^0.13.12
+  flutter_heatmap_calendar: ^1.0.5
 
 dev_dependencies:
   flutter_test:

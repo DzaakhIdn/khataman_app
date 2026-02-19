@@ -6,6 +6,8 @@ import 'package:khataman_app/features/splash_screen.dart';
 import 'package:khataman_app/features/home/pages/home_page.dart';
 import 'package:khataman_app/features/target/pages/target_pages.dart';
 import 'package:khataman_app/features/timer/pages/timer_page.dart';
+import 'package:khataman_app/features/history/pages/history_page.dart';
+import 'package:khataman_app/features/statistics/pages/statistics_page.dart';
 
 final appRouter = GoRouter(
   initialLocation: SplashScreen.routeName,
@@ -33,6 +35,11 @@ final appRouter = GoRouter(
         GoRoute(
           path: ReadingSessionPage.routeName,
           builder: (_, __) => ReadingSessionPage(),
+        ),
+        GoRoute(path: HistoryPage.routeName, builder: (_, __) => HistoryPage()),
+        GoRoute(
+          path: StatisticsPage.routeName,
+          builder: (_, __) => StatisticsPage(),
         ),
       ],
     ),
